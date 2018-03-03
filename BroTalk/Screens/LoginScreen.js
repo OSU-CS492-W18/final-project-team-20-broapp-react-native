@@ -4,12 +4,10 @@ import {
     Text,
     View,
     TextInput,
-    Button
+    Button,
 } from 'react-native';
 import LayoutStyle from '../Styles/Layout.js';
 import { StackNavigator } from 'react-navigation';
-
-
 
 export class LoginScreen extends React.Component {
     static navigationOptions = {
@@ -26,8 +24,7 @@ export class LoginScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            UserName: "",
-            PassWord: "",
+            UserName: "Brosuif"
         };
     }
 
@@ -36,7 +33,7 @@ export class LoginScreen extends React.Component {
     }
 
     updateUserName = (user) => {
-        this.setState({ UserName: user});
+        this.setState({ UserName: user });
         console.log(user);
     }
 
@@ -48,22 +45,15 @@ export class LoginScreen extends React.Component {
     render() {
         return (
             <View style={LayoutStyle.container}>
-                <Text>Choose a name Bro!</Text>
+                <Text style={LayoutStyle.h1Login}>Choose a name Bro!</Text>
                 <TextInput
                     style={LayoutStyle.loginTextInput}
                     onChangeText={this.updateUserName}
                     value={this.state.UserName}
                 />
-                {/* <Text>Password</Text>
-                <TextInput
-                    secureTextEntry={true}
-                    style={LayoutStyle.loginTextInput}
-                    onChangeText={this.updatePassword}
-                    value={this.state.PassWord}
-                /> */}
                 <Button
                     title="Login Bro!"
-                    onPress={() => this.changeScreen('Details')}
+                    onPress={() => this.changeScreen('Menu')}
                 />
             </View>
         );

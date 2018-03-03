@@ -7,16 +7,16 @@ export default StyleSheet.create({
       backgroundColor: 'lightgrey',
       alignItems: 'center',
       justifyContent: 'center',
-    },
-    toolbar: {
-      backgroundColor: '#2196F3',
-      height: 56,
-      alignSelf: 'stretch',
+      flexDirection:'column'
     },
     loginTextInput: { 
+      margin: 20,
       height: 40,
       width: 200,
-      borderColor: '#fff',
-      borderWidth: 1
     },
+    h1Login: {
+      margin:20,
+      fontSize: 30,
+      fontWeight:'bold',
+    }
   });
