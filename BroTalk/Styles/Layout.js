@@ -6,6 +6,11 @@ export default StyleSheet.create({
       flex: 1,
       backgroundColor: '#fff',
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
+    },
+    toolbar: {
+      backgroundColor: '#2196F3',
+      height: 56,
+      alignSelf: 'stretch',
     },
   });
