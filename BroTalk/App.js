@@ -7,5 +7,9 @@ import { LoginScreen } from './Screens/LoginScreen';
 export default StackNavigator({
   Login: {
     screen: LoginScreen,
-  }
-});
+  },
+},
+{
+  initialRouteName: 'Login',
+}
+);
