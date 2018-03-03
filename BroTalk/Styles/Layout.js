@@ -1,6 +1,7 @@
-import StyleSheet from 'react-native';
+import React from 'react';
+import { StyleSheet } from 'react-native';
 
-export const LayoutStyle = StyleSheet.create({
+export default StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: '#fff',
