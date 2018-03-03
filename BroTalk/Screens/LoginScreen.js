@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import LayoutStyle from '../Styles/Layout.js';
 import { StackNavigator } from 'react-navigation';
+import store from 'react-native-simple-store';
 
 export class LoginScreen extends React.Component {
     static navigationOptions = {
@@ -26,20 +27,24 @@ export class LoginScreen extends React.Component {
         this.state = {
             UserName: "Brosuif"
         };
+
+        store.get("username").then(res => {
+            if(res !== null || res !== undefined) {
+                this.setState({
+                    UserName: res
+                });
+            }
+        });
     }
 
-    changeScreen(screenName) {
-        this.props.navigation.navigate(screenName);
+    changeScreen() {
+        store.update("username", this.state.UserName);
+        this.props.navigation.navigate('Menu');
     }
 
-    updateUserName = (user) => {
+    updateTextBoxUserName = (user) => {
         this.setState({ UserName: user });
         console.log(user);
-    }
-
-    updatePassword = (pass) => {
-        this.setState({ PassWord: pass });
-        console.log(pass);
     }
 
     render() {
@@ -48,12 +53,12 @@ export class LoginScreen extends React.Component {
                 <Text style={LayoutStyle.h1Login}>Choose a name Bro!</Text>
                 <TextInput
                     style={LayoutStyle.loginTextInput}
-                    onChangeText={this.updateUserName}
+                    onChangeText={this.updateTextBoxUserName}
                     value={this.state.UserName}
                 />
                 <Button
                     title="Login Bro!"
-                    onPress={() => this.changeScreen('Menu')}
+                    onPress={() => this.changeScreen()}
                 />
             </View>
         );
