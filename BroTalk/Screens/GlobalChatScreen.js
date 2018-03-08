@@ -10,9 +10,9 @@ import LayoutStyle from '../Styles/Layout.js';
 import { StackNavigator } from 'react-navigation';
 import store from 'react-native-simple-store';
 
-export class MenuScreen extends React.Component {
+export class GlobalChatScreen extends React.Component {
     static navigationOptions = {
-        title: 'BroTalk Menu',
+        title: 'Global Chat',
         headerStyle: {
             backgroundColor: '#4286f4',
         },
@@ -35,22 +35,10 @@ export class MenuScreen extends React.Component {
         });
     }
 
-    navigateToChat(ChatName) {
-        this.props.navigation.navigate(ChatName);
-    }
-
     render() {
         return (
             <View style={LayoutStyle.container}>
-                <Text>Bro Menu welcome: {this.state.UserName}</Text>
-                <Button 
-                    title="Global Chat"
-                    onPress={() => this.navigateToChat("GlobalChat")}
-                />
-                <Button 
-                    title="PlaceHolder Chat"
-                    onPress={() => console.log("place holder navigation")}
-                />
+                <Text>global chat</Text>
             </View>
         );
     }
