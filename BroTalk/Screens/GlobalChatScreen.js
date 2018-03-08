@@ -14,6 +14,7 @@ import * as SendBird from 'sendbird';
 /***
  * Using SendBird:
  * https://sendbird.com/
+ * https://blog.sendbird.com/react-native-chat-tutorial-one-build-chat-with-sendbird
  */
 
 export class GlobalChatScreen extends React.Component {
