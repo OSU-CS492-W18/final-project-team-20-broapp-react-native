@@ -9,6 +9,12 @@ import {
 import LayoutStyle from '../Styles/Layout.js';
 import { StackNavigator } from 'react-navigation';
 import store from 'react-native-simple-store';
+import * as SendBird from 'sendbird';
+
+/***
+ * Using SendBird:
+ * https://sendbird.com/
+ */
 
 export class GlobalChatScreen extends React.Component {
     static navigationOptions = {
