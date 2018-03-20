@@ -9,6 +9,8 @@ import {
 import LayoutStyle from '../Styles/Layout.js';
 import { StackNavigator } from 'react-navigation';
 import store from 'react-native-simple-store';
+import SendBird from 'sendbird';
+import { APP_ID } from "../protected";
 
 export class LoginScreen extends React.Component {
     static navigationOptions = {
@@ -25,7 +27,7 @@ export class LoginScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            UserName: "Brosuif"
+            UserName: ""
         };
 
         store.get("username").then(res => {
@@ -39,6 +41,30 @@ export class LoginScreen extends React.Component {
 
     changeScreen() {
         store.update("username", this.state.UserName);
+        const userName = this.state.UserName;
+        console.log("User: " + userName);
+
+        const sb = new SendBird({ 'appId': APP_ID });
+        // Connect to SendBird API
+        sb.connect(this.state.UserName, (user, error) => {
+            if (error) {
+                console.log("Error Logging in:" + error);
+            } else {
+                sb.updateCurrentUserInfo(userName, null, (user, error) => {
+                    if (error) {
+                        console.log("Error Updating User in:" + error);
+                    } else {
+                        this.setState({
+                            UserName: '',
+                        }, () => {
+                            console.log("Logged in!");
+                            this.props.navigation.navigate('Menu');
+                        });
+                    }
+                })
+            }
+        })
+
         this.props.navigation.navigate('Menu');
     }
 

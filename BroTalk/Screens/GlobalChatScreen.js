@@ -9,7 +9,8 @@ import {
 import LayoutStyle from '../Styles/Layout.js';
 import { StackNavigator } from 'react-navigation';
 import store from 'react-native-simple-store';
-import * as SendBird from 'sendbird';
+import SendBird from 'sendbird';
+import { CHANNEL_URL, APP_ID } from "../protected";
 
 /***
  * Using SendBird:
@@ -18,6 +19,7 @@ import * as SendBird from 'sendbird';
  */
 
 export class GlobalChatScreen extends React.Component {
+
     static navigationOptions = {
         title: 'Global Chat',
         headerStyle: {
@@ -31,8 +33,11 @@ export class GlobalChatScreen extends React.Component {
 
     constructor(props) {
         super(props);
-        
-        this.state = { UserName: "Bro"};
+        var channel;
+        this.state = { 
+            UserName: "Bro",
+            channel: null  
+        };
         store.get("username").then(res => {
             if (res !== null || res !== undefined) {
                 this.setState({
@@ -42,10 +47,45 @@ export class GlobalChatScreen extends React.Component {
         });
     }
 
+    openChannel(){
+        const sb = SendBird.getInstance();
+        sb.OpenChannel.getChannel(CHANNEL_URL, function(channel, error) {
+            if(error) {
+                console.error(error);
+                return;
+            }
+            
+            // Successfully fetched the channel.
+            console.log("Channel fetched:" + channel);
+            
+            // Enter global channel
+           channel.enter( function(response, error){
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+            });
+
+            //Send test message
+            channel.sendUserMessage("Hello bros", function(message, error) {
+                if (error) {
+                  console.log(error);
+                  return;
+                }
+                console.log("Sent Message");
+            }); 
+            
+        });
+    }
+
     render() {
         return (
             <View style={LayoutStyle.container}>
                 <Text>global chat</Text>
+                <Button
+                    title="Chat Bro!"
+                    onPress={() => this.openChannel()}
+                />
             </View>
         );
     }
