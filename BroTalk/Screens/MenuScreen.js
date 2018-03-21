@@ -9,6 +9,7 @@ import {
 import LayoutStyle from '../Styles/Layout.js';
 import { StackNavigator } from 'react-navigation';
 import store from 'react-native-simple-store';
+import { ShareButton } from '../Components/shareButton';
 
 export class MenuScreen extends React.Component {
     static navigationOptions = {
@@ -51,6 +52,7 @@ export class MenuScreen extends React.Component {
                     title="PlaceHolder Chat"
                     onPress={() => console.log("place holder navigation")}
                 />
+                <ShareButton/>
             </View>
         );
     }
