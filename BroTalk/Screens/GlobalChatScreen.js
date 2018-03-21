@@ -62,7 +62,7 @@ export class GlobalChatScreen extends React.Component {
     }
 
     openChannel() {
-        var self = this;
+        let self = this;
         sb.OpenChannel.getChannel(CHANNEL_URL, function (newChannel, error) {
             if (error) {
                 console.error(error);
@@ -88,26 +88,26 @@ export class GlobalChatScreen extends React.Component {
     }
 
     updateMessages(update){
-        var self = this;
+        let self = this;
         // Fetch previous 30 messages in channel from API
         if(update){
             self.state.messages = []
             self.state.channelQuery = channel.createPreviousMessageListQuery();
         }
-        var messageList = self.state.channelQuery;
+        let messageList = self.state.channelQuery;
         messageList.load(30, false, function(response, error){
             if (error) {
                 console.error(error);
                 return;
             }
 
-            var messages = [];
-            for(var i = 0; i < response.length; i++) {
+            let messages = [];
+            for(let i = 0; i < response.length; i++) {
                 messages.push(response[i]);
             }
 
             //save messages and update state
-            var newMessages = self.state.messages.concat(messages.reverse());
+            let newMessages = self.state.messages.concat(messages.reverse());
             console.log(newMessages);
             self.setState({
                 messages: newMessages,
@@ -116,9 +116,9 @@ export class GlobalChatScreen extends React.Component {
     }
 
     sendMessage(text) {
-        var self = this;
+        let self = this;
         //Send test message
-        var message = BroArray[Math.floor((Math.random() * 6) + 1)];
+        let message = BroArray[Math.floor((Math.random() * 6) + 1)];
         if(text){
             message = text;
         }
@@ -129,11 +129,11 @@ export class GlobalChatScreen extends React.Component {
                 return;
             }
             console.log("Sent Message:" + toString(message));
-            var messages = []
+            let messages = []
             messages.push(message);
 
             //save new message and update state
-            var newMessages = messages.concat(self.state.messages);
+            let newMessages = messages.concat(self.state.messages);
             console.log(newMessages);
             self.setState({
                 messages: newMessages,
@@ -148,6 +148,23 @@ export class GlobalChatScreen extends React.Component {
         console.log(this.state.text);
     }
 
+    renderRowMsg = (rowData) => {
+        if (rowData.messageType === 'user') {
+            return (
+            <TouchableHighlight underlayColor='#f7f8fc' onPress={() => console.log(rowData)}>
+                <View style={[ChatStyles.listItem, {transform: [{ scaleY: -1 }]}]}>
+                    <View style={ChatStyles.senderContainer}>
+                        <Text style={[ChatStyles.senderText, {color: '#3e3e55'}]}>{rowData.sender.nickname}</Text>
+                        <Text style={[ChatStyles.senderText, {color: '#343434', fontWeight: 'bold'}]}>{rowData.message}</Text>
+                    </View>
+                </View>
+            </TouchableHighlight>
+            );
+        } else {
+            return null;
+        }
+    }
+
     renderMsgList() {
         return (
             <View style={[ChatStyles.chatContainer, {transform: [{ scaleY: -1 }]}]}>
@@ -156,22 +173,7 @@ export class GlobalChatScreen extends React.Component {
                 onEndReached={() => this.updateMessages(true)}
                 onEndReachedThreshold={40}
                 dataSource={this.state.dataSource}
-                renderRow={(rowData) => {
-                    if (rowData.messageType == 'user') {
-                    return (
-                        <TouchableHighlight underlayColor='#f7f8fc' onPress={() => console.log(rowData)}>
-                        <View style={[ChatStyles.listItem, {transform: [{ scaleY: -1 }]}]}>
-                            <View style={ChatStyles.senderContainer}>
-                                <Text style={[ChatStyles.senderText, {color: '#3e3e55'}]}>{rowData.sender.nickname}</Text>
-                                <Text style={[ChatStyles.senderText, {color: '#343434', fontWeight: 'bold'}]}>{rowData.message}</Text>
-                            </View>
-                        </View>
-                    </TouchableHighlight>
-                    );
-                    } else {
-                        return null;
-                    }
-                }}/>
+                renderRow={(rowData) => this.renderRowMsg(rowData)}/>
             </View>
         );
     }
