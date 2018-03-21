@@ -5,13 +5,12 @@ import {
 } from 'react-native';
 
 export class ShareButton extends React.Component {
-
 	shareApp = () => {
 		Share.share({
-			message: 'Share Button Message',
-			title: 'Bro App share button'
+			message: 'Join some broski\'s today! Download BroTalk on Google Play or the App Store!',
+			title: 'BroTalk share'
 		}, {
-			dialogTitle: 'Share Dialog'
+			dialogTitle: 'Share Bros!'
 		})
 		.then(res => console.log(res))
 		.catch(err => console.log(err));
@@ -20,7 +19,7 @@ export class ShareButton extends React.Component {
 	render() {
 		return (
 			<Button
-				title="Share Button"
+				title="Share to your Bros!"
 				onPress={() => this.shareApp()}
 			/>
 			);

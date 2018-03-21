@@ -49,7 +49,9 @@ export class GlobalChatScreen extends React.Component {
         };
 
         this.openChannel();
+    }
 
+    componentWillMount() {
         store.get("username").then(res => {
             if (res !== null || res !== undefined) {
                 this.setState({
@@ -146,49 +148,55 @@ export class GlobalChatScreen extends React.Component {
         console.log(this.state.text);
     }
 
+    renderMsgList() {
+        return (
+            <View style={[ChatStyles.chatContainer, {transform: [{ scaleY: -1 }]}]}>
+            <ListView
+                enableEmptySections={true}
+                onEndReached={() => this.updateMessages(true)}
+                onEndReachedThreshold={40}
+                dataSource={this.state.dataSource}
+                renderRow={(rowData) => {
+                    if (rowData.messageType == 'user') {
+                    return (
+                        <TouchableHighlight underlayColor='#f7f8fc' onPress={() => console.log(rowData)}>
+                        <View style={[ChatStyles.listItem, {transform: [{ scaleY: -1 }]}]}>
+                            <View style={ChatStyles.senderContainer}>
+                                <Text style={[ChatStyles.senderText, {color: '#3e3e55'}]}>{rowData.sender.nickname}</Text>
+                                <Text style={[ChatStyles.senderText, {color: '#343434', fontWeight: 'bold'}]}>{rowData.message}</Text>
+                            </View>
+                        </View>
+                    </TouchableHighlight>
+                    );
+                    } else {
+                        return null;
+                    }
+                }}/>
+            </View>
+        );
+    }
+
     render() {
         return (
             <View style={ChatStyles.container}>
-            <View style={[ChatStyles.chatContainer, {transform: [{ scaleY: -1 }]}]}>
-                <ListView
-                    enableEmptySections={true}
-                    onEndReached={() => this.updateMessages(true)}
-                    onEndReachedThreshold={40}
-                    dataSource={this.state.dataSource}
-                    renderRow={(rowData) => {
-                        if (rowData.messageType == 'user') {
-                        return (
-                            <TouchableHighlight underlayColor='#f7f8fc' onPress={() => console.log(rowData)}>
-                            <View style={[ChatStyles.listItem, {transform: [{ scaleY: -1 }]}]}>
-                                <View style={ChatStyles.senderContainer}>
-                                    <Text style={[ChatStyles.senderText, {color: '#3e3e55'}]}>{rowData.sender.nickname}</Text>
-                                    <Text style={[ChatStyles.senderText, {color: '#343434', fontWeight: 'bold'}]}>{rowData.message}</Text>
-                                </View>
-                            </View>
-                        </TouchableHighlight>
-                        );
-                        } else {
-                            return null;
-                        }
-                    }}/>
-                </View>
+                {this.renderMsgList()}
 
                 <View style={ChatStyles.inputContainer}>
-                    <TextInput
+                    {/* <TextInput
                         style={ChatStyles.textInput}
                         placeholder={'Please type mesasge...'}
                         ref='textInput'
                         onChangeText={this.onChangedMessageText}
                         value={this.state.text}
-                    />
+                    /> */}
                     <Button
                         style={ChatStyles.sendButton}
-                        title="Bro down!"
+                        title="Bro.."
                         onPress={() => this.sendMessage("Bro...")}
                     />
                     <Button
                         style={ChatStyles.sendButton}
-                        title="Chat Bro!"
+                        title="Random"
                         onPress={() => this.sendMessage()}
                     />
                 </View>

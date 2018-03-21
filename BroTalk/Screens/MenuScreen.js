@@ -27,6 +27,10 @@ export class MenuScreen extends React.Component {
         super(props);
         
         this.state = { UserName: "Bro"};
+        
+    }
+
+    componentWillMount(){
         store.get("username").then(res => {
             if (res !== null || res !== undefined) {
                 this.setState({
