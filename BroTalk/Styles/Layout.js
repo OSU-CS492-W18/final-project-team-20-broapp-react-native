@@ -18,5 +18,8 @@ export default StyleSheet.create({
       margin:20,
       fontSize: 30,
       fontWeight:'bold',
-    }
+    },
+    menuBtn: {
+      margin:20,
+    },
   });

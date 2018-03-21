@@ -14,9 +14,12 @@ import store from 'react-native-simple-store';
 import ChatStyles from '../Styles/ChatStyles';
 import SendBird from 'sendbird';
 import { CHANNEL_URL, APP_ID, BroArray } from "../protected";
+import moment from 'moment';
+
 var sb = null;
 var dataStore = null;
 var channel = null;
+
 /***
  * Using SendBird:
  * https://sendbird.com/
@@ -95,7 +98,7 @@ export class GlobalChatScreen extends React.Component {
             self.state.channelQuery = channel.createPreviousMessageListQuery();
         }
         let messageList = self.state.channelQuery;
-        messageList.load(30, false, function(response, error){
+        messageList.load(30, false, (response, error) => {
             if (error) {
                 console.error(error);
                 return;
@@ -156,6 +159,7 @@ export class GlobalChatScreen extends React.Component {
                     <View style={ChatStyles.senderContainer}>
                         <Text style={[ChatStyles.senderText, {color: '#3e3e55'}]}>{rowData.sender.nickname}</Text>
                         <Text style={[ChatStyles.senderText, {color: '#343434', fontWeight: 'bold'}]}>{rowData.message}</Text>
+                        <Text style={[ChatStyles.senderText, {color: '#343434'}]}>{moment(rowData.createdAt).calendar()}</Text>
                     </View>
                 </View>
             </TouchableHighlight>
@@ -178,30 +182,33 @@ export class GlobalChatScreen extends React.Component {
         );
     }
 
+    renderInputs(){
+        return (
+        <View style={ChatStyles.inputContainer}>
+            <Button
+                style={ChatStyles.sendButton}
+                title="Bro..."
+                onPress={() => this.sendMessage("Bro...")}
+            />
+            <Button
+                style={ChatStyles.sendButton}
+                title="Bro!"
+                onPress={() => this.sendMessage("Bro!")}
+            />
+            <Button
+                style={ChatStyles.sendButton}
+                title="Random"
+                onPress={() => this.sendMessage()}
+            />
+        </View>
+        );
+    }
+
     render() {
         return (
             <View style={ChatStyles.container}>
                 {this.renderMsgList()}
-
-                <View style={ChatStyles.inputContainer}>
-                    {/* <TextInput
-                        style={ChatStyles.textInput}
-                        placeholder={'Please type mesasge...'}
-                        ref='textInput'
-                        onChangeText={this.onChangedMessageText}
-                        value={this.state.text}
-                    /> */}
-                    <Button
-                        style={ChatStyles.sendButton}
-                        title="Bro.."
-                        onPress={() => this.sendMessage("Bro...")}
-                    />
-                    <Button
-                        style={ChatStyles.sendButton}
-                        title="Random"
-                        onPress={() => this.sendMessage()}
-                    />
-                </View>
+                {this.renderInputs()}
             </View>
         );
     }
