@@ -14,9 +14,12 @@ import store from 'react-native-simple-store';
 import ChatStyles from '../Styles/ChatStyles';
 import SendBird from 'sendbird';
 import { CHANNEL_URL, APP_ID, BroArray } from "../protected";
+import moment from 'moment';
+
 var sb = null;
 var dataStore = null;
 var channel = null;
+
 /***
  * Using SendBird:
  * https://sendbird.com/
@@ -109,8 +112,8 @@ export class GlobalChatScreen extends React.Component {
             self.state.messages = []
             self.state.channelQuery = channel.createPreviousMessageListQuery();
         }
-        var messageList = self.state.channelQuery;
-        messageList.load(30, false, function(response, error){
+        let messageList = self.state.channelQuery;
+        messageList.load(30, false, (response, error) => {
             if (error) {
                 console.error(error);
                 return;
@@ -163,52 +166,64 @@ export class GlobalChatScreen extends React.Component {
         console.log(this.state.text);
     }
 
+    renderRowMsg = (rowData) => {
+        if (rowData.messageType === 'user') {
+            return (
+            <TouchableHighlight underlayColor='#f7f8fc' onPress={() => console.log(rowData)}>
+                <View style={[ChatStyles.listItem, {transform: [{ scaleY: -1 }]}]}>
+                    <View style={ChatStyles.senderContainer}>
+                        <Text style={[ChatStyles.senderText, {color: '#3e3e55'}]}>{rowData.sender.nickname}</Text>
+                        <Text style={[ChatStyles.senderText, {color: '#343434', fontWeight: 'bold'}]}>{rowData.message}</Text>
+                        <Text style={[ChatStyles.senderText, {color: '#343434'}]}>{moment(rowData.createdAt).calendar()}</Text>
+                    </View>
+                </View>
+            </TouchableHighlight>
+            );
+        } else {
+            return null;
+        }
+    }
+
+    renderMsgList() {
+        return (
+            <View style={[ChatStyles.chatContainer, {transform: [{ scaleY: -1 }]}]}>
+            <ListView
+                enableEmptySections={true}
+                onEndReached={() => this.updateMessages(true)}
+                onEndReachedThreshold={40}
+                dataSource={this.state.dataSource}
+                renderRow={(rowData) => this.renderRowMsg(rowData)}/>
+            </View>
+        );
+    }
+
+    renderInputs(){
+        return (
+        <View style={ChatStyles.inputContainer}>
+            <Button
+                style={ChatStyles.sendButton}
+                title="Bro..."
+                onPress={() => this.sendMessage("Bro...")}
+            />
+            <Button
+                style={ChatStyles.sendButton}
+                title="Bro!"
+                onPress={() => this.sendMessage("Bro!")}
+            />
+            <Button
+                style={ChatStyles.sendButton}
+                title="Random"
+                onPress={() => this.sendMessage()}
+            />
+        </View>
+        );
+    }
+
     render() {
         return (
             <View style={ChatStyles.container}>
-            <View style={[ChatStyles.chatContainer, {transform: [{ scaleY: -1 }]}]}>
-                <ListView
-                    enableEmptySections={true}
-                    onEndReached={() => this.updateMessages(true)}
-                    onEndReachedThreshold={40}
-                    dataSource={this.state.dataSource}
-                    renderRow={(rowData) => {
-                        if (rowData.messageType == 'user') {
-                        return (
-                            <TouchableHighlight underlayColor='#f7f8fc' onPress={() => console.log(rowData)}>
-                            <View style={[ChatStyles.listItem, {transform: [{ scaleY: -1 }]}]}>
-                                <View style={ChatStyles.senderContainer}>
-                                    <Text style={[ChatStyles.senderText, {color: '#3e3e55'}]}>{rowData.sender.nickname}</Text>
-                                    <Text style={[ChatStyles.senderText, {color: '#343434', fontWeight: 'bold'}]}>{rowData.message}</Text>
-                                </View>
-                            </View>
-                        </TouchableHighlight>
-                        );
-                        } else {
-                            return null;
-                        }
-                    }}/>
-                </View>
-
-                <View style={ChatStyles.inputContainer}>
-                    <TextInput
-                        style={ChatStyles.textInput}
-                        placeholder={'Please type mesasge...'}
-                        ref='textInput'
-                        onChangeText={this.onChangedMessageText}
-                        value={this.state.text}
-                    />
-                    <Button
-                        style={ChatStyles.sendButton}
-                        title="Bro down!"
-                        onPress={() => this.sendMessage("Bro...")}
-                    />
-                    <Button
-                        style={ChatStyles.sendButton}
-                        title="Chat Bro!"
-                        onPress={() => this.sendMessage()}
-                    />
-                </View>
+                {this.renderMsgList()}
+                {this.renderInputs()}
             </View>
         );
     }
