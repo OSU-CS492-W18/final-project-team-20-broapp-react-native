@@ -49,9 +49,7 @@ export class GlobalChatScreen extends React.Component {
         };
 
         this.openChannel();
-    }
 
-    componentWillMount() {
         store.get("username").then(res => {
             if (res !== null || res !== undefined) {
                 this.setState({
@@ -61,8 +59,25 @@ export class GlobalChatScreen extends React.Component {
         });
     }
 
-    openChannel() {
+    componentDidMount() {
         let self = this;
+        var channelHandler = new sb.ChannelHandler();
+        channelHandler.onMessageReceived = function(channel, message){
+            var newMessage = [];
+            newMessage.push(message);
+            var messageList = newMessage.concat(self.state.messages);
+            
+            self.setState({ 
+                messages: messageList, 
+                dataSource: self.state.dataSource.cloneWithRows(messageList)
+            });
+        };
+
+        sb.addChannelHandler("GlobalChat", channelHandler);
+    }
+
+    openChannel() {
+        var self = this;
         sb.OpenChannel.getChannel(CHANNEL_URL, function (newChannel, error) {
             if (error) {
                 console.error(error);
@@ -88,26 +103,26 @@ export class GlobalChatScreen extends React.Component {
     }
 
     updateMessages(update){
-        let self = this;
+        var self = this;
         // Fetch previous 30 messages in channel from API
         if(update){
             self.state.messages = []
             self.state.channelQuery = channel.createPreviousMessageListQuery();
         }
-        let messageList = self.state.channelQuery;
+        var messageList = self.state.channelQuery;
         messageList.load(30, false, function(response, error){
             if (error) {
                 console.error(error);
                 return;
             }
 
-            let messages = [];
-            for(let i = 0; i < response.length; i++) {
+            var messages = [];
+            for(var i = 0; i < response.length; i++) {
                 messages.push(response[i]);
             }
 
             //save messages and update state
-            let newMessages = self.state.messages.concat(messages.reverse());
+            var newMessages = self.state.messages.concat(messages.reverse());
             console.log(newMessages);
             self.setState({
                 messages: newMessages,
@@ -116,9 +131,9 @@ export class GlobalChatScreen extends React.Component {
     }
 
     sendMessage(text) {
-        let self = this;
+        var self = this;
         //Send test message
-        let message = BroArray[Math.floor((Math.random() * 6) + 1)];
+        var message = BroArray[Math.floor((Math.random() * 6) + 1)];
         if(text){
             message = text;
         }
@@ -129,11 +144,11 @@ export class GlobalChatScreen extends React.Component {
                 return;
             }
             console.log("Sent Message:" + toString(message));
-            let messages = []
+            var messages = []
             messages.push(message);
 
             //save new message and update state
-            let newMessages = messages.concat(self.state.messages);
+            var newMessages = messages.concat(self.state.messages);
             console.log(newMessages);
             self.setState({
                 messages: newMessages,
@@ -148,57 +163,49 @@ export class GlobalChatScreen extends React.Component {
         console.log(this.state.text);
     }
 
-    renderRowMsg = (rowData) => {
-        if (rowData.messageType === 'user') {
-            return (
-            <TouchableHighlight underlayColor='#f7f8fc' onPress={() => console.log(rowData)}>
-                <View style={[ChatStyles.listItem, {transform: [{ scaleY: -1 }]}]}>
-                    <View style={ChatStyles.senderContainer}>
-                        <Text style={[ChatStyles.senderText, {color: '#3e3e55'}]}>{rowData.sender.nickname}</Text>
-                        <Text style={[ChatStyles.senderText, {color: '#343434', fontWeight: 'bold'}]}>{rowData.message}</Text>
-                    </View>
-                </View>
-            </TouchableHighlight>
-            );
-        } else {
-            return null;
-        }
-    }
-
-    renderMsgList() {
-        return (
-            <View style={[ChatStyles.chatContainer, {transform: [{ scaleY: -1 }]}]}>
-            <ListView
-                enableEmptySections={true}
-                onEndReached={() => this.updateMessages(true)}
-                onEndReachedThreshold={40}
-                dataSource={this.state.dataSource}
-                renderRow={(rowData) => this.renderRowMsg(rowData)}/>
-            </View>
-        );
-    }
-
     render() {
         return (
             <View style={ChatStyles.container}>
-                {this.renderMsgList()}
+            <View style={[ChatStyles.chatContainer, {transform: [{ scaleY: -1 }]}]}>
+                <ListView
+                    enableEmptySections={true}
+                    onEndReached={() => this.updateMessages(true)}
+                    onEndReachedThreshold={40}
+                    dataSource={this.state.dataSource}
+                    renderRow={(rowData) => {
+                        if (rowData.messageType == 'user') {
+                        return (
+                            <TouchableHighlight underlayColor='#f7f8fc' onPress={() => console.log(rowData)}>
+                            <View style={[ChatStyles.listItem, {transform: [{ scaleY: -1 }]}]}>
+                                <View style={ChatStyles.senderContainer}>
+                                    <Text style={[ChatStyles.senderText, {color: '#3e3e55'}]}>{rowData.sender.nickname}</Text>
+                                    <Text style={[ChatStyles.senderText, {color: '#343434', fontWeight: 'bold'}]}>{rowData.message}</Text>
+                                </View>
+                            </View>
+                        </TouchableHighlight>
+                        );
+                        } else {
+                            return null;
+                        }
+                    }}/>
+                </View>
 
                 <View style={ChatStyles.inputContainer}>
-                    {/* <TextInput
+                    <TextInput
                         style={ChatStyles.textInput}
                         placeholder={'Please type mesasge...'}
                         ref='textInput'
                         onChangeText={this.onChangedMessageText}
                         value={this.state.text}
-                    /> */}
+                    />
                     <Button
                         style={ChatStyles.sendButton}
-                        title="Bro.."
+                        title="Bro down!"
                         onPress={() => this.sendMessage("Bro...")}
                     />
                     <Button
                         style={ChatStyles.sendButton}
-                        title="Random"
+                        title="Chat Bro!"
                         onPress={() => this.sendMessage()}
                     />
                 </View>
