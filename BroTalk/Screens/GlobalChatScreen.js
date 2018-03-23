@@ -200,21 +200,34 @@ export class GlobalChatScreen extends React.Component {
     renderInputs(){
         return (
         <View style={ChatStyles.inputContainer}>
-            <Button
-                style={ChatStyles.sendButton}
-                title="Bro..."
-                onPress={() => this.sendMessage("Bro...")}
-            />
-            <Button
-                style={ChatStyles.sendButton}
-                title="Bro!"
-                onPress={() => this.sendMessage("Bro!")}
-            />
-            <Button
-                style={ChatStyles.sendButton}
-                title="Random"
-                onPress={() => this.sendMessage()}
-            />
+            <View style={ChatStyles.buttonView}>
+                <Button
+                    style={ChatStyles.sendButton}
+                    title="Bro..."
+                    onPress={() => this.sendMessage("Bro...")}
+                />
+            </View>
+            <View style={ChatStyles.buttonView}>
+                <Button
+                    style={ChatStyles.sendButton}
+                    title="Bro!"
+                    onPress={() => this.sendMessage("Bro!")}
+                />
+            </View>
+            <View style={ChatStyles.buttonView}>
+                <Button
+                    style={ChatStyles.sendButton}
+                    title="Bra!"
+                    onPress={() => this.sendMessage("Bra!")}
+                />
+            </View>
+            <View style={ChatStyles.buttonView}>
+                <Button
+                    style={ChatStyles.sendButton}
+                    title="Rand"
+                    onPress={() => this.sendMessage()}
+                />
+            </View>
         </View>
         );
     }

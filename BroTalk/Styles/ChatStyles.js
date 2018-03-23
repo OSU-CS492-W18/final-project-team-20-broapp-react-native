@@ -47,7 +47,12 @@ export default StyleSheet.create({
       backgroundColor: '#f7f8fc',
       padding: 5,
     },
-  
+    buttonView: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      padding: 5,
+    },  
     adListItem: {
       flex: 1,
       flexDirection: 'row',
